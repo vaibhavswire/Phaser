@@ -1,0 +1,130 @@
+<<<<<<< HEAD
+1|class Example extends Phaser.Scene {
+2|    constructor() {
+3|        super();
+4|    }
+5|
+6|    create() {
+7|        // Set the background color to black
+8|        this.cameras.main.setBackgroundColor('#000000');
+9|    }
+10|}
+11|
+12|const config = {
+13|    type: Phaser.AUTO,
+14|    parent: 'renderDiv',
+15|    scale: {
+16|        mode: Phaser.Scale.FIT,
+17|        autoCenter: Phaser.Scale.CENTER_BOTH,
+18|    },
+19|    width: 800,
+20|    height: 600,
+21|    scene: Example
+22|};
+23|
+24|window.phaserGame = new Phaser.Game(config);
+=======
+1|class Example extends Phaser.Scene {
+2|    constructor() {
+3|        super();
+4|        this.backgroundMusic;
+5|    }
+6|
+7|    preload() {
+8|        this.load.image('orchard', `https://play.rosebud.ai/assets/orchard.png?PYWE`);
+9|        this.load.image('apple', `https://play.rosebud.ai/assets/apple.png?Hypw`);
+10|        this.load.image('red', `https://play.rosebud.ai/assets/red.png?mn03`);
+11|        this.load.audio('background_music', `https://play.rosebud.ai/assets/2D_playground_template_music.mp3?qH05`);
+12|    }
+13|
+14|    create() {
+15|        const { width, height } = this.scale;
+16|
+17|        // Add the new orchard background
+18|        const background = this.add.image(width / 2, height / 2, 'orchard');
+19|
+20|        // Scale the background to cover the entire game area while maintaining aspect ratio
+21|        const scaleX = width / background.width;
+22|        const scaleY = height / background.height;
+23|        const scale = Math.max(scaleX, scaleY);
+24|        background.setScale(scale);
+25|
+26|        const particles = this.add.particles('red');
+27|        const emitter = particles.createEmitter({
+28|            speed: 100,
+29|            scale: { start: 1, end: 0 },
+30|            blendMode: 'ADD',
+31|            tint: 0x42e0f5 // Set the tint to light blue color (#42e0f5)
+32|        });
+33|
+34|        const apple = this.physics.add.image(width / 2, height * 0.2, 'apple');
+35|
+36|        // Make the apple 20% smaller than its previous size
+37|        apple.setScale(0.2 * 0.8);
+38|
+39|        apple.setVelocity(100, 200);
+40|        apple.setBounce(0.8, 0.8);
+41|        apple.setCollideWorldBounds(true);
+42|
+43|        emitter.startFollow(apple);
+44|
+45|        // Enable dragging of the apple
+46|        apple.setInteractive();
+47|        this.input.setDraggable(apple);
+48|        this.input.on('dragstart', (pointer, gameObject) => {
+49|            gameObject.body.setVelocity(0);
+50|            gameObject.body.setAcceleration(0);
+51|            gameObject.body.setAngularVelocity(0);
+52|        });
+53|        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+54|            gameObject.body.setVelocity(0);
+55|            gameObject.body.setAcceleration(0);
+56|            gameObject.body.setAngularVelocity(0);
+57|            gameObject.x = dragX;
+58|            gameObject.y = dragY;
+59|        });
+60|        this.input.on('pointerdown', (pointer, currentlyOver) => {
+61|            if (currentlyOver.length === 0) {
+62|                const newApple = this.physics.add.image(pointer.x, pointer.y, 'apple');
+63|                newApple.setScale(0.2 * 0.8);
+64|                newApple.setBounce(0.8, 0.8);
+65|                newApple.setCollideWorldBounds(true);
+66|                newApple.setInteractive();
+67|                this.input.setDraggable(newApple);
+68|                emitter.startFollow(newApple);
+69|            } else {
+70|                currentlyOver.forEach(gameObject => {
+71|                    gameObject.body.setVelocity(0);
+72|                    gameObject.body.setAcceleration(0);
+73|                    gameObject.body.setAngularVelocity(0);
+74|                });
+75|            }
+76|        });
+77|
+78|        // Background music
+79|        this.backgroundMusic = this.sound.add('background_music', { loop: true, volume: 0.1 });
+80|        this.backgroundMusic.play();
+81|    }
+82|}
+83|
+84|const config = {
+85|    type: Phaser.AUTO,
+86|    parent: 'renderDiv',
+87|    pixelArt: true,
+88|    scale: {
+89|        mode: Phaser.Scale.FIT,
+90|        autoCenter: Phaser.Scale.CENTER_BOTH,
+91|        width: 360,
+92|        height: 640
+93|    },
+94|    physics: {
+95|        default: 'arcade',
+96|        arcade: {
+97|            gravity: { y: 200 }
+98|        }
+99|    },
+100|    scene: Example
+101|};
+102|
+103|window.phaserGame = new Phaser.Game(config);
+>>>>>>> updated
